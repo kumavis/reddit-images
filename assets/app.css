@@ -7,3 +7,11 @@ input.picker-input {
   margin: 6px 0px;
   padding-left: 6px;
 }
+
+.post-img {
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  background-size: cover;
+  background-repeat: no-repeat;
+}

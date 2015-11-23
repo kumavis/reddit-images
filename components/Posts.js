@@ -1,20 +1,17 @@
 import h from 'react-hyperscript'
 import React, { PropTypes, Component } from 'react'
 
+const semanticThumbnails = ['default','self','nsfw']
+
 export default class Posts extends Component {
   render() {
-    var imagePosts = this.props.posts.filter((post) => !!post.post_hint)
+    var imagePosts = this.props.posts.filter((post) => !!imgForPost(post))
     return h('div', imagePosts.map((post, index) =>
-      h('div', {
+      h('div.post-img', {
         key: index,
         onClick: () => window.open(post.url,'_blank'),
         style: {
-          width: '200px',
-          height: '200px',
           backgroundImage: `url("${imgForPost(post)}")`,
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat',
-          display: 'inline-block',
         },
       })
     ))
@@ -30,7 +27,9 @@ function imgForPost(post){
     return post.url
   } else if (post.media) {
     return post.media.oembed.thumbnail_url
-  } else {
+  } else if (post.thumbnail && semanticThumbnails.indexOf(post.thumbnail) === -1) {
     return post.thumbnail
+  // } else {
+  //   return post.url
   }
 }
