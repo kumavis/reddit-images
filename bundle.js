@@ -21287,7 +21287,7 @@
 	      posts = [].concat.call(posts, json.data.children);
 	      var lastPost = posts[posts.length - 1];
 	      lastPostName = lastPost && lastPost.data.name;
-	      if (posts.length < MIN_POSTS) {
+	      if (lastPostName && posts.length < MIN_POSTS) {
 	        return fetchPostBatch(reddit, dispatch);
 	      } else {
 	        return dispatch(receivePosts(reddit, posts));
