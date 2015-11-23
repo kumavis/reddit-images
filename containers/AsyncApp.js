@@ -46,10 +46,10 @@ class AsyncApp extends Component {
           onChange: this.handleChange,
           options: [ 'reactjs', 'frontend'],
         }),
-        h('p', [
-          lastUpdated && h('span', `Last updated at ${new Date(lastUpdated).toLocaleTimeString()}`),
-          !isFetching && h('a', { href: '#', onClick: this.handleRefreshClick }, 'Refresh'),
-        ]),
+        // h('p', [
+        //   lastUpdated && h('span', `Last updated at ${new Date(lastUpdated).toLocaleTimeString()}`),
+        //   !isFetching && h('a', { href: '#', onClick: this.handleRefreshClick }, 'Refresh'),
+        // ]),
         isFetching && posts.length === 0 && h('h2', 'Loading...'),
         !isFetching && posts.length === 0 && h('h2', 'Empty.'),
         posts.length > 0 && h('div', { style: { opacity: isFetching ? 0.5 : 1 } }, [

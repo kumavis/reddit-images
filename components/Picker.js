@@ -6,12 +6,12 @@ export default class Picker extends Component {
     const { value, onChange, options } = this.props
     const selectOptions = options.map(option => h('option', { value: option, key: option }, option))
     return h('span', [
-      h('h1', value),
+      // h('h1', value),
       // h('select', {
       //   onChange: e => onChange(e.target.value),
       //   value: value,
       // }, selectOptions),
-      h('input', {
+      h('input.picker-input', {
         onChange: e => onChange(e.target.value),
         value: value,
       }),
