@@ -21284,10 +21284,13 @@
 	    return (0, _isomorphicFetch2.default)('https://www.reddit.com/r/' + reddit + '.json?after=' + lastPostName).then(function (req) {
 	      return req.json();
 	    }).then(function (json) {
+	      if (!(json && json.data && json.data.children)) return dispatch(receivePosts(reddit, posts));
 	      posts = [].concat.call(posts, json.data.children);
 	      var lastPost = posts[posts.length - 1];
-	      lastPostName = lastPost && lastPost.data.name;
-	      if (lastPostName && posts.length < MIN_POSTS) {
+	      // abort if nothing new
+	      if (!lastPost || lastPostName === lastPost.data.name) return dispatch(receivePosts(reddit, posts));
+	      lastPostName = lastPost.data.name;
+	      if (posts.length < MIN_POSTS) {
 	        return fetchPostBatch(reddit, dispatch);
 	      } else {
 	        return dispatch(receivePosts(reddit, posts));
