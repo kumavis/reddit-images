@@ -21281,7 +21281,7 @@
 	  };
 
 	  function fetchPostBatch(reddit, dispatch) {
-	    return (0, _isomorphicFetch2.default)('http://www.reddit.com/r/' + reddit + '.json?after=' + lastPostName).then(function (req) {
+	    return (0, _isomorphicFetch2.default)('https://www.reddit.com/r/' + reddit + '.json?after=' + lastPostName).then(function (req) {
 	      return req.json();
 	    }).then(function (json) {
 	      posts = [].concat.call(posts, json.data.children);
