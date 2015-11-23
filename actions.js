@@ -54,7 +54,7 @@ function fetchPosts(reddit) {
         var lastPost = posts[posts.length-1]
         lastPostName = lastPost && lastPost.data.name
         if (posts.length < MIN_POSTS) {
-          return performPostFetch(reddit, dispatch)
+          return fetchPostBatch(reddit, dispatch)
         } else {
           return dispatch(receivePosts(reddit, posts))
         }
