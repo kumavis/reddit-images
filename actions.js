@@ -47,7 +47,7 @@ function fetchPosts(reddit) {
   }
 
   function fetchPostBatch(reddit, dispatch) {
-    return fetch(`http://www.reddit.com/r/${reddit}.json?after=${lastPostName}`)
+    return fetch(`https://www.reddit.com/r/${reddit}.json?after=${lastPostName}`)
       .then( req => req.json() )
       .then(function(json){
         posts = [].concat.call(posts, json.data.children)
