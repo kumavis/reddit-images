@@ -19780,6 +19780,8 @@
 
 	var store = (0, _configureStore2.default)();
 
+	window.store = store;
+
 	var Root = (function (_Component) {
 	  _inherits(Root, _Component);
 
@@ -21148,7 +21150,7 @@
 	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 	function selectedReddit() {
-	  var state = arguments.length <= 0 || arguments[0] === undefined ? 'reactjs' : arguments[0];
+	  var state = arguments.length <= 0 || arguments[0] === undefined ? 'pics' : arguments[0];
 	  var action = arguments[1];
 
 	  switch (action.type) {
@@ -21286,7 +21288,7 @@
 	      var lastPost = posts[posts.length - 1];
 	      lastPostName = lastPost && lastPost.data.name;
 	      if (posts.length < MIN_POSTS) {
-	        return performPostFetch(reddit, dispatch);
+	        return fetchPostBatch(reddit, dispatch);
 	      } else {
 	        return dispatch(receivePosts(reddit, posts));
 	      }
@@ -21814,7 +21816,12 @@
 	        value: selectedReddit,
 	        onChange: this.handleChange,
 	        options: ['reactjs', 'frontend']
-	      }), (0, _reactHyperscript2.default)('p', [lastUpdated && (0, _reactHyperscript2.default)('span', 'Last updated at ' + new Date(lastUpdated).toLocaleTimeString()), !isFetching && (0, _reactHyperscript2.default)('a', { href: '#', onClick: this.handleRefreshClick }, 'Refresh')]), isFetching && posts.length === 0 && (0, _reactHyperscript2.default)('h2', 'Loading...'), !isFetching && posts.length === 0 && (0, _reactHyperscript2.default)('h2', 'Empty.'), posts.length > 0 && (0, _reactHyperscript2.default)('div', { style: { opacity: isFetching ? 0.5 : 1 } }, [(0, _reactHyperscript2.default)(_Posts2.default, { posts: posts })])]);
+	      }),
+	      // h('p', [
+	      //   lastUpdated && h('span', `Last updated at ${new Date(lastUpdated).toLocaleTimeString()}`),
+	      //   !isFetching && h('a', { href: '#', onClick: this.handleRefreshClick }, 'Refresh'),
+	      // ]),
+	      isFetching && posts.length === 0 && (0, _reactHyperscript2.default)('h2', 'Loading...'), !isFetching && posts.length === 0 && (0, _reactHyperscript2.default)('h2', 'Empty.'), posts.length > 0 && (0, _reactHyperscript2.default)('div', { style: { opacity: isFetching ? 0.5 : 1 } }, [(0, _reactHyperscript2.default)(_Posts2.default, { posts: posts })])]);
 	    }
 	  }]);
 
@@ -21900,12 +21907,13 @@
 	      var selectOptions = options.map(function (option) {
 	        return (0, _reactHyperscript2.default)('option', { value: option, key: option }, option);
 	      });
-	      return (0, _reactHyperscript2.default)('span', [(0, _reactHyperscript2.default)('h1', value),
+	      return (0, _reactHyperscript2.default)('span', [
+	      // h('h1', value),
 	      // h('select', {
 	      //   onChange: e => onChange(e.target.value),
 	      //   value: value,
 	      // }, selectOptions),
-	      (0, _reactHyperscript2.default)('input', {
+	      (0, _reactHyperscript2.default)('input.picker-input', {
 	        onChange: function onChange(e) {
 	          return _onChange(e.target.value);
 	        },
@@ -21953,6 +21961,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	var semanticThumbnails = ['default', 'self', 'nsfw'];
+
 	var Posts = (function (_Component) {
 	  _inherits(Posts, _Component);
 
@@ -21966,21 +21976,16 @@
 	    key: 'render',
 	    value: function render() {
 	      var imagePosts = this.props.posts.filter(function (post) {
-	        return !!post.post_hint;
+	        return !!imgForPost(post);
 	      });
 	      return (0, _reactHyperscript2.default)('div', imagePosts.map(function (post, index) {
-	        return (0, _reactHyperscript2.default)('div', {
+	        return (0, _reactHyperscript2.default)('div.post-img', {
 	          key: index,
 	          onClick: function onClick() {
 	            return window.open(post.url, '_blank');
 	          },
 	          style: {
-	            width: '200px',
-	            height: '200px',
-	            backgroundImage: 'url("' + imgForPost(post) + '")',
-	            backgroundSize: 'cover',
-	            backgroundRepeat: 'no-repeat',
-	            display: 'inline-block'
+	            backgroundImage: 'url("' + imgForPost(post) + '")'
 	          }
 	        });
 	      }));
@@ -22001,8 +22006,10 @@
 	    return post.url;
 	  } else if (post.media) {
 	    return post.media.oembed.thumbnail_url;
-	  } else {
+	  } else if (post.thumbnail && semanticThumbnails.indexOf(post.thumbnail) === -1) {
 	    return post.thumbnail;
+	    // } else {
+	    //   return post.url
 	  }
 	}
 
