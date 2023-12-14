@@ -1,9 +1,10 @@
 import React from 'react'
-import { queryPosts } from '../actions.js'
+import { debounceAsync, queryPosts } from '../actions.js'
 import { Picker } from '../components/Picker.js'
 import { Posts } from '../components/Posts.js'
 
 const h = React.createElement
+const debounceQueryPosts = debounceAsync(200, queryPosts)
 
 const useAsync = (asyncFunction, deps) => {
   const [value, setValue] = React.useState(null)
@@ -36,8 +37,7 @@ const useAsync = (asyncFunction, deps) => {
 export const App = () => {
   const [selectedReddit, setSelectedReddit] = React.useState('pics')
   const { value: posts, loading, error } = useAsync(async () => {
-    const posts = await queryPosts(selectedReddit)
-    return posts
+    return debounceQueryPosts(selectedReddit)
   }, [selectedReddit])
 
   return (
