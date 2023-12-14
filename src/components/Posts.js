@@ -31,7 +31,7 @@ function imgForPost(post){
   const { url, post_hint, media, thumbnail } = post.data
   if (post_hint === 'image') {
     return url
-  } else if (media) {
+  } else if (media?.oembed) {
     return media.oembed.thumbnail_url
   } else if (thumbnail && !semanticThumbnails.includes(thumbnail)) {
     return thumbnail
