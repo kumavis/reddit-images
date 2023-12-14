@@ -1,23 +1,21 @@
-module.exports = {
-    entry: "./index.js",
-    resolve: {
-        extensions: ['', '.js', '.jsx'],
-    },
-    output: {
-        path: __dirname,
-        filename: "bundle.js"
-    },
-    module: {
-        loaders: [
-            // { test: /\.css$/, loader: "style!css" },
-            {
-                test: /\.js?$/,
-                exclude: /(node_modules|bower_components)/,
-                loader: 'babel-loader',
-                query: {
-                  presets: 'es2015',
-                },
-            }
-        ]
-    }
+import CopyWebpackPlugin from 'copy-webpack-plugin'
+import path from 'path'
+
+const __dirname = path.resolve();
+const distDir = path.resolve(__dirname, 'dist');
+const publicDir = path.resolve(__dirname, 'public');
+
+export default {
+  entry: './src/index.js',
+  output: {
+    filename: 'bundle.js',
+    path: distDir,
+  },
+  plugins: [
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: publicDir, to: distDir }
+      ]
+    })
+  ]
 };
